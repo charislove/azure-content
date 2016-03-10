@@ -3,8 +3,8 @@
 	description="Frequently asked questions about Microsoft Azure Machine Learning competitions."
 	services="machine-learning"
 	documentationCenter=""
-	authors="garyericson"
-	manager="paulettm"
+	authors="charislove"
+	manager="haining"
 	editor="cgronlun"/>
 
 <tags
@@ -32,7 +32,7 @@ Follow the competition tutorial and watch the brief video.
 **Do I need to be a data scientist to enter?**
 
 No. In fact, we encourage data enthusiasts, those curious about data
-scientist, and other non-expert data scientists to enter our contest. We
+science, and other non-expert data scientists to enter our contest. We
 have designed supporting documents to allow everyone to compete.
 
 **How long will this take?**
