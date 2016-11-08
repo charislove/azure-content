@@ -3,8 +3,8 @@
 	description="Frequently Asked Questions" 
 	services="machine-learning" 
 	documentationCenter="" 
-	authors="LuisCabrer" 
-	manager="paulettm" 
+	authors="bharaths" 
+	manager="jhubbard" 
 	editor="cgronlun"/>
 
 <tags 
@@ -13,8 +13,8 @@
 	ms.tgt_pltfrm="na" 
 	ms.devlang="na" 
 	ms.topic="article" 
-	ms.date="12/08/2015" 
-	ms.author="luisca"/> 
+	ms.date="09/11/2016" 
+	ms.author="bharaths"/> 
 
 #Publishing and using Machine Learning apps in the Azure Marketplace: FAQ
 

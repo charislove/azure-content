@@ -12,24 +12,19 @@
    ms.topic="article"
    ms.tgt_pltfrm="NA"
    ms.workload="TBD"
-   ms.date="02/18/2016"
+   ms.date="07/18/2016"
    ms.author="alkohli" />
 
 
-# Deploy StorSimple Virtual Array – Set up your virtual device as an iSCSI server (preview)
+# Deploy StorSimple Virtual Array – Set up your virtual device as an iSCSI server
 
 ![iscsi setup process flow](./media/storsimple-ova-deploy3-iscsi-setup/iscsi4.png)
 
 ## Overview
 
-This deployment tutorial applies to the Microsoft Azure StorSimple Virtual Array (also known as the StorSimple on-premises virtual device or the StorSimple virtual device) running the v 1.1.1.0 Public Preview release. This tutorial describes how to perform initial setup, register your StorSimple iSCSI server, complete the device setup, and then create, mount, initialize, and format volumes on your StorSimple virtual device iSCSI server. The StorSimple setup information in this article applies to StorSimple Virtual Arrays only. 
+This deployment tutorial applies to the Microsoft Azure StorSimple Virtual Array (also known as the StorSimple on-premises virtual device or the StorSimple virtual device) running March 2016 general availability (GA) release. This tutorial describes how to perform initial setup, register your StorSimple iSCSI server, complete the device setup, and then create, mount, initialize, and format volumes on your StorSimple virtual device iSCSI server. The StorSimple setup information in this article applies to StorSimple Virtual Arrays only. 
 
 The procedures described here take approximately 30 minutes to 1 hour to complete. The information published in this article applies to StorSimple Virtual Arrays only.
-
->[AZURE.IMPORTANT] 
->
->- The StorSimple Virtual Array is in preview and is intended for evaluation and deployment planning purposes. Installing this preview in a production environment is not supported. 
->- If you experience any issues with the StorSimple Virtual Array, please post the issues on the [StorSimple MSDN forum](https://social.msdn.microsoft.com/Forums/home?forum=StorSimple).
 
 ## Setup prerequisites
 
@@ -92,19 +87,13 @@ Use the following step-by-step instructions to set up and configure your StorSim
 
     3. Specify if you want this device to be domain-joined. If your device is an iSCSI server, then joining the domain is optional. If you decide to not join your iSCSI server to a domain, click **Apply**, wait for the settings to be applied and then skip to the next step.
 
-        If you want to join the device to a domain. Enter a **Domain name** (shown below).
+        If you want to join the device to a domain. Enter a **Domain name**, and then click **Apply**.
 
-    4. Click **Apply**.
+        > [AZURE.NOTE] If joining your iSCSI server to a domain, ensure that your virtual  array is in its own organizational unit (OU) for Microsoft Azure Active Directory and no group policy objects (GPO) are applied to it.
 
     5. A dialog box will appear. Enter your domain credentials in the specified format. Click the check icon ![check icon](./media/storsimple-ova-deploy3-iscsi-setup/image15.png). The domain credentials will be verified. You will see an error message if the credentials are incorrect.
 
         ![credentials](./media/storsimple-ova-deploy3-iscsi-setup/image8.png)
-        
-           > [AZURE.NOTE]
-	   > 
-	   > If joining your iSCSI server to a domain, ensure that your virtual array is in its own organizational unit (OU) for 
-	   > Microsoft Azure Active Directory and no group policy objects (GPO) are applied to it.
-	   
 
     6. Click **Apply**. This will apply and validate the device settings.
  
@@ -116,7 +105,7 @@ Use the following step-by-step instructions to set up and configure your StorSim
 
     1. Supply the **Web proxy URL** in this format: *http://host-IP address* or *FDQN:Port number*. Note that HTTPS URLs are not supported.
 
-    2. Specify **Authentication** as **Basic**, **NTLM**, or **None**.
+    2. Specify **Authentication** as **Basic** or **None**.
 
     3. If you are using authentication, you will also need to provide a **Username** and **Password**.
 
@@ -204,7 +193,7 @@ Perform the following steps in the Azure classic portal to create a volume.
 
         A tiered volume on the other hand is thinly provisioned and can be created very quickly. When you create a tiered volume, approximately 10% of the space is provisioned on the local tier and 90% of the space is provisioned in the cloud. For example, if you provisioned a 1 TB volume, 100 GB would reside in the local space and 900 GB would be used in the cloud when the data tiers. This in turn implies is that if you run out of all the local space on the device, you cannot provision a tiered share (because the 10% will not be available).
 
-    4. Specify the provisioned capacity for your volume. Note that the specified capacity should be smaller than the available capacity. If you are creating a tiered volume, the size should be between 500 GB and 20 TB. For a locally pinned volume, specify a volume size between 50 GB and 2 TB. Use the available capacity as a guide to provisioning a volume. If the available local capacity is 0 GB, then you will not be allowed to provision a locally pinned or a tiered volume.
+    4. Specify the provisioned capacity for your volume. Note that the specified capacity should be smaller than the available capacity. If you are creating a tiered volume, the size should be between 500 GB and 5 TB. For a locally pinned volume, specify a volume size between 50 GB and 500 GB. Use the available capacity as a guide to provisioning a volume. If the available local capacity is 0 GB, then you will not be allowed to provision a locally pinned or a tiered volume.
 
         ![Basic settings](./media/storsimple-ova-deploy3-iscsi-setup/image17.png)
 

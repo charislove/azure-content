@@ -12,10 +12,13 @@
     ms.tgt_pltfrm="na"
     ms.devlang="na"
     ms.topic="article"
-    ms.date="12/05/2015"
+    ms.date="08/15/2016"
     ms.author="elizapo" />
 
 # How to add a user to your Azure RemoteApp collection
+
+> [AZURE.IMPORTANT]
+> Azure RemoteApp is being discontinued. Read the [announcement](https://go.microsoft.com/fwlink/?linkid=821148) for details.
 
 Before your users can see and use your apps in Azure RemoteApp, you have to grant them access to your collection. This is the easy part: On the **User Access** tab, enter the account information for the user, and then click the check mark.
 
@@ -41,7 +44,7 @@ You can use this table as a quick reference for which identity is supported in y
 |ADsync with password sync	|Yes	|Yes	|
 |ADsync without password sync|	Yes	|No	|
 |ADsync with AD FS	|Yes	|Yes	|
-|3rd-party Azure supported identity providers  (example Ping)	|Yes	|Yes|
+|[3rd-party Azure supported identity providers](https://msdn.microsoft.com/library/azure/jj679342.aspx)  (example Ping)	|Yes	|Yes|
 |Multi-Factor Authentication	|Yes	|Yes	|
 
 Check out [more information](remoteapp-ad.md) about configuring Active Directory for RemoteApp.

@@ -1,10 +1,10 @@
 <properties 
-	pageTitle="How to log events to Azure Event Hubs in Azure API Management" 
+	pageTitle="How to log events to Azure Event Hubs in Azure API Management | Microsoft Azure" 
 	description="Learn how to log events to Azure Event Hubs in Azure API Management." 
 	services="api-management" 
 	documentationCenter="" 
 	authors="steved0x" 
-	manager="dwrede" 
+	manager="erikre" 
 	editor=""/>
 
 <tags 
@@ -13,7 +13,7 @@
 	ms.tgt_pltfrm="na" 
 	ms.devlang="na" 
 	ms.topic="article" 
-	ms.date="12/07/2015" 
+	ms.date="10/25/2016" 
 	ms.author="sdanie"/>
 
 # How to log events to Azure Event Hubs in Azure API Management
@@ -86,7 +86,7 @@ When you make the request, if the logger is created a status code of `201 Create
 
 Once your logger is configured in API Management, you can configure your log-to-eventhubs policies to log the desired events. The log-to-eventhubs policy can be used in either the inbound policy section or the outbound policy section.
 
-To configure policies, sign-in to the [Azure classic portal](https://manage.windowsazure.com), navigate your API Management service, and click either **publisher portal** or **Manage** to access the publisher portal.
+To configure policies, sign-in to the [Azure portal](https://portal.azure.com), navigate to your API Management service, and click **Publisher portal** to access the publisher portal.
 
 ![Publisher portal][publisher-portal]
 

@@ -3,8 +3,8 @@
     description="This article describes source control integration with GitHub in Azure Automation."
     services="automation"
     documentationCenter=""
-    authors="SnehaGunda"
-    manager="stevenka"
+    authors="mgoedtel"
+    manager="jwhit"
     editor="tysonn" />    
 <tags 
     ms.service="automation"
@@ -12,7 +12,7 @@
     ms.topic="article"
     ms.tgt_pltfrm="na"
     ms.workload="infrastructure-services"
-    ms.date="02/18/2016"
+    ms.date="09/12/2016"
     ms.author="magoedte;sngun" />
 
 # Source control integration in Azure Automation

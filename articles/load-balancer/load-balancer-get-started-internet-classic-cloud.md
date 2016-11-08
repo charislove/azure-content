@@ -1,21 +1,21 @@
-<properties 
+<properties
    pageTitle="Get started creating an Internet facing load balancer in classic deployment model using for cloud services | Microsoft Azure"
    description="Learn how to create an Internet facing load balancer in classic deployment model for cloud services"
    services="load-balancer"
    documentationCenter="na"
-   authors="joaoma"
+   authors="sdwheeler"
    manager="carmonm"
    editor=""
    tags="azure-service-management"
 />
-<tags  
+<tags
    ms.service="load-balancer"
    ms.devlang="na"
-   ms.topic="article"
+   ms.topic="get-started-article"
    ms.tgt_pltfrm="na"
    ms.workload="infrastructure-services"
-   ms.date="11/30/2015"
-   ms.author="joaoma" />
+   ms.date="03/17/2016"
+   ms.author="sewhee" />
 
 # Get started creating an Internet facing load balancer for cloud services
 
@@ -28,7 +28,7 @@
 Cloud services are automatically configured with a load balancer and can be customized via the service model.
 
 ## Create a load balancer using the service definition file
- 
+
 You can leverage the Azure SDK for .NET 2.5 to update your cloud service. Endpoint settings for cloud services are made in the [service definition](https://msdn.microsoft.com/library/azure/gg557553.aspx).csdef file.
 
 The following example shows how a servicedefinition.csdef file for a cloud deployment is configured:
@@ -78,7 +78,7 @@ Check the service definition schema for the [health probe](https://msdn.microsof
 
 ## Next steps
 
-[Get started configuring an internal load balancer](load-balancer-internal-getstarted.md)
+[Get started configuring an internal load balancer](load-balancer-get-started-ilb-arm-ps.md)
 
 [Configure a load balancer distribution mode](load-balancer-distribution-mode.md)
 

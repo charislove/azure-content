@@ -4,7 +4,7 @@
    services="Azure Marketplace"
    documentationCenter=""
    authors="HannibalSII"
-   manager=""
+   manager="hascipio"
    editor=""/>
 
 <tags
@@ -13,7 +13,7 @@
    ms.topic="article"
    ms.tgt_pltfrm="Azure"
    ms.workload="na"
-   ms.date="02/02/2016"
+   ms.date="09/30/2016"
    ms.author="hascipio; v-divte"/>
 
 # Guide to create a virtual machine image for the Azure Marketplace
@@ -34,6 +34,8 @@ A SKU is the commercial name for a VM image. A VM image contains one operating s
 
 Regardless of which operating system you use, add only the minimum number of data disks needed by the SKU. Customers cannot remove disks that are part of an image at the time of deployment but can always add disks during or after deployment if they need them.
 
+>[AZURE.IMPORTANT] **Do not change disk count in a new image version.** If you must reconfigure Data disks in the image, define a new SKU. Publishing a new image version with different disk counts will have the potential of breaking new deployment based on the new image version in cases of auto-scaling, automatic deployments of solutions through ARM templates and other scenarios.
+
 ### 1.1 Add an offer
 
 1. Sign in to the [Publishing Portal][link-pubportal] by using your seller account.
@@ -45,96 +47,14 @@ After you have added an offer, you need to define and identify your SKUs. You ca
 
 1. **Add a SKU.** The SKU requires an identifier, which is used in the URL. The identifier must be unique within your publishing profile, but there is no risk of identifier collision with other publishers.
 
-> [AZURE.NOTE] The offer and SKU identifiers are displayed in the offer URL in the Marketplace.
+    > [AZURE.NOTE] The offer and SKU identifiers are displayed in the offer URL in the Marketplace.
 
 2. **Add a summary description for your SKU.** Summary descriptions are visible to customers, so you should make them easily readable. This information does not need to be locked until the "Push to Staging" phase. Until then, you are free to edit it.
 3. If you are using Windows-based SKUs, follow the suggested links to acquire the approved versions of Windows Server.
 
 ## 2. Create an Azure-compatible VHD (Linux-based)
-This section focuses on best practices for creating a Linux-based VM image for the Azure Marketplace. For a step-by-step walkthrough, refer to the following documentation: [Creating and uploading a virtual hard disk that contains the Linux operating system][link-azure-vm-1]
-
-> [AZURE.TIP] Many of the following steps (for example, agent installation, kernel boot parameters) are already taken care of for Linux images available from the Microsoft Azure Image Gallery. Thus, starting with one of these images as a base can represent a time savings versus configuring a Linux image that is not Azure aware.
-
-### 2.1 Choose the correct VHD size
-Published SKUs (VM images) should be designed to work with all VM sizes that support the number of disks for the SKU. You can provide guidance on recommended sizes, but these will be treated as recommendations and not enforced:
-
-1. Linux operating system VHD: The Linux operating system VHD in your VM image should be created as a 30 GB - 50 GB fixed-format VHD. It cannot be less than 30 GB. If the physical size is less than VHD size, the VHD should be sparse. Linux VHDs larger than 50 GB will be considered on a case-by-case basis. If you already have a VHD in a different format, you can use the [Convert-VHD PowerShell cmdlet to change the format][link-technet-1].
-2. Data disk VHD: Data disks can be as large as 1 TB. Data disk VHDs should be created as a fixed-format VHD. They should also be sparse. When deciding on the disk size, keep in mind that customers cannot resize VHDs within an image.
-
-### 2.2 Ensure that the latest Azure Linux Agent is installed
-When preparing the operating system VHD, make sure that the latest [Azure Linux Agent][link-azure-vm-2] is installed. Using the RPM or Deb packages. The package is often named walinuxagent or WALinuxAgent, but check with your distribution to be certain. The agent provides key functions for deploying Linux IaaS deployments in Azure, such as VM provisioning and networking capabilities.  
-
-Although the agent can be configured in a variety of ways, we recommend that you use a generic agent configuration to maximize compatibility. You can install the agent manually, but we strongly recommend that you use the preconfigured packages from your distribution if available.
-
-If you do choose to install the agent manually from the [GitHub repository][link-github-waagent], first copy the Waagent file to /usr/sbin and run the following commands at the root directory.
-
-    # chmod 755 /usr/sbin/waagent
-    # /usr/sbin/waagent -install
-
-The agent configuration file is placed at /etc/waagent.conf.
-
-### 2.3 Verify that required libraries are included
-In addition to the Azure Linux Agent, the following libraries should also be included:
-
-1. The [Linux Integration Services][link-intsvc] 3.0 or higher must be enabled in your kernel. See [Linux kernel requirements](../virtual-machines/virtual-machines-linux-create-upload-vhd-generic/#linux-kernel-requirements).
-2. [Kernel patch](https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/drivers/scsi/storvsc_drv.c?id=5c1b10ab7f93d24f29b5630286e323d1c5802d5c) for Azure I/O stability (likely not needed for any recent kernel, but it should be verified)
-3. [Python][link-python] 2.6 or above
-4. Python pyasn1 package, if not already installed
-5. [OpenSSL][link-openssl] (v1.0 or greater recommended)
-
-### 2.4 Set up disk partitions
-We recommend that you do not use Logical Volume Manager. Create a single root partition for the operating system disk. Do not use a swap partition on the operating system or data disk. We do recommend removing a swap partition, even if it is not mounted in /etc/fstab.  If needed, a swap partition can be created on the local resource disk (/dev/sdb) by the Linux Agent.
-
-### 2.5 Add required Kernel boot line parameters
-The following parameters also need to be added to the Kernel boot line.
-
-        console=ttyS0 earlyprintk=ttyS0 rootdelay=300
-
-This ensures that Azure Support can provide customers with serial console output when needed. It also provides an adequate time-out for operating system disk mounting from cloud storage. Even if your SKU blocks customers from directly SSHing into the virtual machine, serial console output must be enabled.
-
-### 2.6 Include SSH Server by default
-We strongly recommend enabling SSH for the customer. If SSH Server is enabled, add the SSH keep alive to sshd config with the following option: **ClientAliveInterval 180**. Although 180 is recommended, the acceptable range is 30 through 235. Not all applications want to give customers direct SSH access to the virtual machine. If SSH is explicitly blocked, the **ClientAliveInterval** option does not need to be set.
-
-### 2.7 Meet networking requirements
-The following are networking requirements for an Azure-compatible Linux VM image:
-
-- In many cases, it is best to disable NetworkManager.  One exception is with systems based on CentOS 7.x (and derivatives), which should keep NetworkManager enabled.
-- Networking configuration should be controllable via the **ifup** and **ifdown** scripts. The Linux Agent may use these commands to restart networking during provisioning.
-- There should be no custom network configuration. The Resolv.conf file should be deleted as a final step. This is typically done as part of deprovisioning (see the [Azure Linux Agent user guide](../virtual-machines/virtual-machines-linux-agent-user-guide/)). You can also perform this step manually with the following command.
-
-        rm /etc/resolv.conf
-
-- The network device needs to be brought up on startup and use DHCP.
-- IPv6 6 is not supported on Azure. If this property is enabled, it will not work.
-
-### 2.8  Ensure that security best practices are in place
-It is critical for SKUs in the Azure Marketplace to follow best practices in regards to security. These include the following:
-
-- Install all security patches for your distribution.
-- Follow distribution security guidelines.
-- Avoid creating default accounts, which remain the same, across provisioning instances.
-- Clear bash history entries.
-- Include iptables (firewall) software, but do not enable any rules. This provides a seamless default experience for customers. Customers who want to use a VM firewall for additional configuration can configure the iptables rules to meet their specific needs.
-
-### 2.9 Generalize the image
-All images in the Azure Marketplace must be reusable in a generic fashion, which requires stripping them of certain configuration specifics. To accomplish this in Linux, the operating system VHD must be deprovisioned.
-
-The Linus command for deprovisioning is as follows.
-
-        # waagent -deprovision
-
-This command automatically:
-
-- Removes the nameserver configuration in /etc/resolv.conf.
-- Removes cached DHCP client leases.
-- Resets the host name to localhost.localdomain.
-
-We recommend setting the configuration file (/etc/waagent.conf) to ensure that the following actions are also completed:
-
-- Set Provisioning.RegenerateSshHostKeyPair to "y" in the configuration file to remove all SSH host keys.
-- Set Provisioning.DeleteRootPassword to "y" in the configuration file to remove the ‘root’ password from /etc/shadow. For documentation about the contents of the configuration file, see the “CONFIGURATION” section of the README file on the Agent Github repository page ([https://github.com/Azure/WALinuxAgent](https://github.com/Azure/WALinuxAgent) and scroll down).  
-
-At this point, you have completed generalizing of the Linux VM. Turn off the VM either from the Azure portal, command line, or from within the VM.  When the VM is off, continue at Step 3.4.
+This section focuses on best practices for creating a Linux-based VM image for the Azure Marketplace. For a step-by-step walkthrough, refer to the following documentation:
+[Creating and Uploading a Virtual Hard Disk that Contains the Linux Operating System](../virtual-machines/virtual-machines-linux-classic-create-upload-vhd.md)
 
 ## 3. Create an Azure-compatible VHD (Windows-based)
 This section focuses on the steps to create a SKU based on Windows Server for the Azure Marketplace.
@@ -250,9 +170,9 @@ All images in the Azure Marketplace must be reusable in a generic fashion. In ot
 - For Windows, the image should be "sysprepped," and no configurations should be done that do not support the **sysprep** command.
 - You can run the following command from the directory %windir%\System32\Sysprep.
 
-        sysprep.exe /generalize /oobe /sshutdown
+        sysprep.exe /generalize /oobe /shutdown
 
-  Guidance on how to sysprep the operating system is provided in Step of the following MSDN article: [Create and upload a Windows Server VHD to Azure](../virtual-machines/virtual-machines-create-upload-vhd-windows-server/).
+  Guidance on how to sysprep the operating system is provided in Step of the following MSDN article: [Create and upload a Windows Server VHD to Azure](../virtual-machines/virtual-machines-windows-classic-createupload-vhd.md).
 
 ## 4. Deploy a VM from your VHDs
 After you have uploaded your VHDs (the generalized operating system VHD and zero or more data disk VHDs) to an Azure storage account, you can register them as a user VM image. Then you can test that image. Note that because your operating system VHD is generalized, you cannot directly deploy the VM by providing the VHD URL.
@@ -263,170 +183,24 @@ To learn more about VM images, review the following blog posts:
 - [VM Image PowerShell How To](https://azure.microsoft.com/blog/vm-image-powershell-how-to-blog-post/)
 - [About VM images in Azure](https://msdn.microsoft.com/library/azure/dn790290.aspx)
 
+### Set up the necessary tools, PowerShell and Azure CLI
+- [How to setup PowerShell](../powershell-install-configure.md )
+- [How to setup Azure CLI](../xplat-cli-install.md)
+
 ### 4.1 Create a user VM image
-To create a user VM image from your SKU to begin deploying multiple VMs, you need to use the [Create VM Image Rest API](http://msdn.microsoft.com/library/azure/dn775054.aspx) to register VHDs as a VM image.
+#### Capture VM
+Please read the links given below for guidance on capturing the VM using API/PowerShell/Azure CLI.
 
-You can use the **Invoke-WebRequest** cmdlet to create a VM image from PowerShell. The following PowerShell script shows how to create a VM image with an operating system disk and one data disk. Note that a subscription and the PowerShell session should already be set up.
+- [API](https://msdn.microsoft.com/library/mt163560.aspx )
+- [PowerShell](../virtual-machines/virtual-machines-windows-capture-image.md)
+-	[Azure CLI](../virtual-machines/virtual-machines-linux-capture-image.md )
 
-        # Image Parameters to Specify
-        $ImageName=’ENTER-YOUR-OWN-IMAGE-NAME-HERE’
-        $Label='ENTER-YOUR-LABEL-HERE'
-        $Description='DESCRIBE YOUR IMAGE HERE’
-        $osCaching='ReadWrite'
-        $os = 'Windows'
-        $state = 'Generalized'
-        $osMediaLink = 'https://mystorageaccount.blob.core.windows.net/vhds/myosvhd.vhd'
-        $dataCaching='None'
-        $lun='1'
-        $dataMediaLink='http://mystorageaccount.blob.core.windows.net/vhds/mydatavhd.vhd'
-        # Subscription-Related Properties
-        $SrvMngtEndPoint='https://management.core.windows.net'
-        $subscription = Get-AzureSubscription -Current -ExtendedDetails
-        $certificate = $subscription.Certificate
-        $SubId = $subscription.SubscriptionId
-        $body =  
-        "<VMImage xmlns=`"http://schemas.microsoft.com/windowsazure`" xmlns:i=`"http://www.w3.org/2001/XMLSchema-instance`">" + Name>" + $ImageName + "</Name>" +
-        "<Label>" + $Label + "</Label>" +
-        "<Description>" + $Description + "</Description>" + "<OSDiskConfiguration>" +
-        "<HostCaching>" + $osCaching + "</HostCaching>" +
-        "<OSState>" + $state + "</OSState>" +
-        "<OS>" + $os + "</OS>" +
-        "<MediaLink>" + $osMediaLink + "</MediaLink>" +
-        "</OSDiskConfiguration>" +
-        "<DataDiskConfigurations>" +
-        "<DataDiskConfiguration>" +
-        "<HostCaching>" + $dataCaching + "</HostCaching>" +
-        "<Lun>" + $lun + "</Lun>" +
-        "<MediaLink>" + $dataMediaLink + "</MediaLink>" +
-        "</DataDiskConfiguration>" +
-        "</DataDiskConfigurations>" +
-        "</VMImage>"
-        $uri = $SrvMngtEndPoint + "/" + $SubId + "/" + "services/vmimages" $headers = @{"x-ms-version"="2014-06-01"}
-        $response = Invoke-WebRequest -Uri $uri -ContentType "application/xml" -Body
-        $body -Certificate $certificate -Headers $headers -Method POST
-        if ($response.StatusCode -ge 200 -and $response.StatusCode -lt 300)
-        {
-        echo "Accepted"
-        } else {
-        echo "Not Accepted" }
-        $opId = $response.Headers.'x-ms-request-id'
-        $uri2 = $SrvMngtEndPoint + "/" + $SubId + "/" + "operations" + "/" + $opId $response2 = Invoke-WebRequest -Uri $uri2 -ContentType "application/xml" -
-        Certificate $certificate -Headers $headers -Method GET
-        $response2.RawContent
+### Generalize Image
+Please read the links given below for guidance on capturing the VM using API/PowerShell/Azure CLI.
 
-
-By running this script, you create a user VM image with the name you provided to the ImageName parameter, myVMImage. It consists of one operating system disk and one data disk.
-
-This API is an asynchronous operation and responds with a 202 "Accepted" code. In order to see whether the VM image has been created, you need to query for operation status. The x-ms-request-id in the return response is the operation ID. This ID should be set in $opId below.
-
-        $opId = #Fill In With Operation ID
-        $uri2 = $SrvMngtEndPoint + "/" + $SubId + "/" + "operations" + "/" + "opId"
-        $response2 = Invoke‐WebRequest ‐Uri $uri2 ‐ContentType "application/xml" ‐Certificate $certificate ‐Headers $headers ‐Method GET
-
-To create a VM image from an operating system VHD and an additional empty data disks (you do not have the VHD for this disk created) by using the Create VM Image API, use the following script.
-
-        # Image Parameters to Specify
-        $ImageName=’myVMImage’
-        $Label='IMAGE_LABEL'
-        $Description='My VM Image to Test’
-        $osCaching='ReadWrite'
-        $os = 'Windows'
-        $state = 'Generalized'
-        $osMediaLink = 'http://mystorageaccount.blob.core.windows.net/containername/myOSvhd.vhd'
-        $dataCaching='None'
-        $lun='1'
-        $emptyDiskSize= 32
-        # Subscription-Related Properties
-        $SrvMngtEndPoint='https://management.core.windows.net'
-        $subscription = Get‐AzureSubscription –Current ‐ExtendedDetails
-        $certificate = $subscription.Certificate
-        $SubId = $subscription.SubscriptionId
-        $body =
-        "<VMImage xmlns="http://schemas.microsoft.com/windowsazure" xmlns:i="http://www.w3.org/2001/XMLSchema‐instance">" +
-        "<Name>" + $ImageName + "</Name>" +
-        "<Label>" + $Label + "</Label>" +
-        "<Description>" + $Description + "</Description>" +
-        "<OSDiskConfiguration>" +
-        "<HostCaching>" + $osCaching + "</HostCaching>" +
-        "<OSState>" + $state + "</OSState>" +
-        "<OS>" + $os + "</OS>" +
-        "<MediaLink>" + $osMediaLink + "</MediaLink>" +
-        "</OSDiskConfiguration>" +
-        "<DataDiskConfigurations>" +
-        "<DataDiskConfiguration>" +
-        "<HostCaching>" + $dataCaching + "</HostCaching>" +
-        "<Lun>" + $lun + "</Lun>" +
-        "<MediaLink>" + $dataMediaLink + "</MediaLink>" +
-        "<LogicalDiskSizeInGB>" + $emptyDiskSize + "</LogicalDiskSizeInGB>" +
-        "</DataDiskConfiguration>" +
-        "</DataDiskConfigurations>" +
-        "</VMImage>"
-        $uri = $SrvMngtEndPoint + "/" + $SubId + "/" + "services/vmimages"
-        $headers = @{"x‐ms‐version"="2014‐06‐01"}
-        $response = Invoke‐WebRequest ‐Uri $uri ‐ContentType "application/xml" ‐Body $body ‐Certificate $certificate ‐Headers $headers ‐Method POST
-        if ($response.StatusCode ‐ge 200 ‐and $response.StatusCode ‐lt 300)
-        {
-        echo "Accepted"
-        }
-        else
-        {
-        echo "Not Accepted"
-        }
-
-By running this script, you create a user VM image with the name you provided to the ImageName parameter, myVMImage. It consists of one operating system disk and one data disk.
-
-This API is an asynchronous operation and responds with a 202 "Accepted" code. In order to see whether the VM image has been created, you need to query for operation status.  The x-ms-request-id in the return response is the operation ID. This ID should be set in $opId below.
-
-        $opId = #Fill In With Operation ID
-        $uri2 = $SrvMngtEndPoint + "/" + $SubId + "/" + "operations" + "/" + "$opId"
-        $response2 = Invoke-WebRequest -Uri $uri2 -ContentType "application/xml" Certificate $certificate -Headers $headers -Method GET
-
-To create a VM image from an operating system VHD and an additional empty data disks (you do not have the VHD for this disk created) by using the Create VM Image API, use the following script.
-
-        # Image Parameters to Specify
-        $ImageName=’myVMImage’
-        $Label='IMAGE_LABEL'
-        $Description='My VM Image to Test’
-        $osCaching='ReadWrite'
-        $os = 'Windows'
-        $state = 'Generalized'
-        $osMediaLink =
-        'http://mystorageaccount.blob.core.windows.net/containername/myOSvhd.vhd'
-        $dataCaching='None'
-        $lun='1'
-        $emptyDiskSize= 32
-        # Subscription-Related Properties
-        $SrvMngtEndPoint='https://management.core.windows.net'
-        $subscription = Get-AzureSubscription –Current -ExtendedDetails
-        $certificate = $subscription.Certificate
-        $SubId = $subscription.SubscriptionId
-        $body =  
-        "<VMImage xmlns=`"http://schemas.microsoft.com/windowsazure`" xmlns:i=`"http://www.w3.org/2001/XMLSchema-instance`">" +
-        "<Name>" + $ImageName + "</Name>" +
-        "<Label>" + $Label + "</Label>" +
-        "<Description>" + $Description + "</Description>" + "<OSDiskConfiguration>" + "<HostCaching>" + $osCaching + "</HostCaching>" +
-        "<OSState>" + $state + "</OSState>" +
-        "<OS>" + $os + "</OS>" +
-        "<MediaLink>" + $osMediaLink + "</MediaLink>" +
-        "</OSDiskConfiguration>" +
-        "<DataDiskConfigurations>" +
-        "<DataDiskConfiguration>" +
-        "<HostCaching>" + $dataCaching + "</HostCaching>" +
-        "<Lun>" + $lun + "</Lun>" +
-        "<MediaLink>" + $dataMediaLink + "</MediaLink>" +
-        "<LogicalDiskSizeInGB>" + $emptyDiskSize + "</LogicalDiskSizeInGB>" + "</DataDiskConfiguration>" +
-        "</DataDiskConfigurations>" +
-        "</VMImage>"
-        $uri = $SrvMngtEndPoint + "/" + $SubId + "/" + "services/vmimages"
-        $headers = @{"x-ms-version"="2014-06-01"}
-        $response = Invoke-WebRequest -Uri $uri -ContentType "application/xml" -Body $body Certificate $certificate -Headers $headers -Method POST
-        if ($response.StatusCode -ge 200 -and $response.StatusCode -lt 300)
-        { echo "Accepted"
-        } else
-        { echo "Not Accepted"
-        }
-
-By running this script, you create a user VM image with the name you provided to the ImageName parameter, myVMImage.  It consists of one operating system disk, based on the VHD you passed, and one empty 32-GB data disk.
+- [API](https://msdn.microsoft.com/library/mt269439.aspx )
+- [PowerShell](../virtual-machines/virtual-machines-windows-capture-image.md)
+- [Azure CLI](../virtual-machines/virtual-machines-linux-capture-image.md)
 
 ### 4.2 Deploy a VM from a user VM image
 To deploy a VM from a user VM image, you can use the current [Azure portal](https://manage.windowsazure.com) or PowerShell.
@@ -454,6 +228,8 @@ To deploy a large VM from the generalized VM image just created, you can use the
     $pass = "adminPassword123"
     $myVM = New‐AzureVMConfig ‐Name "VMImageVM" ‐InstanceSize "Large" ‐ImageName $img.ImageName | Add‐AzureProvisioningConfig ‐Windows ‐AdminUsername $user ‐Password $pass
     New‐AzureVM ‐ServiceName "VMImageCloudService" ‐VMs $myVM ‐Location "West US" ‐WaitForBoot
+
+>[AZURE.IMPORTANT] Please refer [Troubleshooting common issues encountered during VHD creation] for additional assistance.
 
 ## 5. Obtain certification for your VM image
 The next step in preparing your VM image for the Azure Marketplace is to have it certified.
@@ -585,10 +361,7 @@ After you have created your offer and SKU, you should enter the image details as
 4. Fill out the properties under the **SKUs** section.
 5. Under **Operating system family**, click the operating system type associated with the operating system VHD.
 6. In the **Operating system** box, describe the operating system. Consider a format such as operating system family, type, version, and updates. An example is "Windows Server Datacenter 2014 R2."
-7. Select up to six recommended recommended virtual machine sizes. These are recommendations that get displayed to the customer in the Pricing tier blade in the Azure portal when they decide to purchase and deploy your image.
-
-  > [AZURE.NOTE] These are only recommendations. The customer is able to select any VM size that accommodates the disks specified in your image.
-
+7. Select up to six recommended virtual machine sizes. These are recommendations that get displayed to the customer in the Pricing tier blade in the Azure Portal when they decide to purchase and deploy your image. **These are only recommendations. The customer is able to select any VM size that accommodates the disks specified in your image.**
 8. Enter the version. The version field encapsulates a semantic version to identify the product and its updates:
   -	Versions should be of the form X.Y.Z, where X, Y, and Z are integers.
   -	Images in different SKUs can have different major and minor versions.
@@ -597,7 +370,7 @@ After you have created your offer and SKU, you should enter the image details as
 10. If there are data disks associated with this SKU, select the logical unit number (LUN) to which you would like this data disk to be mounted upon deployment.
 11. In the **LUN X VHD URL** box, enter the shared access signature URI created for the first data VHD.
 
-    ![drawing][img-pubportal-vm-skus-2]
+    ![drawing](media/marketplace-publishing-vm-image-creation/vm-image-pubportal-skus-3.png)
 
 ## Next step
 After you are done with the SKU details, you can move forward to the [Azure Marketplace marketing content guide][link-pushstaging]. In that step of the publishing process, you provide the marketing content, pricing, and other information necessary prior to **Step 3: Testing your VM offer in staging**, where you test various use-case scenarios before deploying the offer to the Azure Marketplace for public visibility and purchase.  
@@ -632,9 +405,9 @@ After you are done with the SKU details, you can move forward to the [Azure Mark
 
 [link-pushstaging]:marketplace-publishing-push-to-staging.md
 [link-github-waagent]:https://github.com/Azure/WALinuxAgent
-[link-azure-codeplex]:http://storageexplorer.com/
-[link-azure-2]:../storage/storage-dotnet-shared-access-signature-part-2/
-[link-azure-1]:../storage/storage-dotnet-shared-access-signature-part-1/
+[link-azure-codeplex]:https://azurestorageexplorer.codeplex.com/
+[link-azure-2]: ../storage/storage-dotnet-shared-access-signature-part-2.md
+[link-azure-1]: ../storage/storage-dotnet-shared-access-signature-part-1.md
 [link-msft-download]:http://www.microsoft.com/download/details.aspx?id=44299
 [link-technet-3]:https://technet.microsoft.com/library/hh846766.aspx
 [link-technet-2]:https://msdn.microsoft.com/library/dn495261.aspx
@@ -650,9 +423,8 @@ After you are done with the SKU details, you can move forward to the [Azure Mark
 [link-datactr-2012]:http://azure.microsoft.com/marketplace/partners/microsoft/windowsserver2012datacenter/
 [link-datactr-2008-r2]:http://azure.microsoft.com/marketplace/partners/microsoft/windowsserver2008r2sp1/
 [link-acct-creation]:marketplace-publishing-accounts-creation-registration.md
-[link-azure-vm-1]:../virtual-machines/virtual-machines-linux-create-upload-vhd/
 [link-technet-1]:https://technet.microsoft.com/library/hh848454.aspx
-[link-azure-vm-2]:../virtual-machines/virtual-machines-linux-agent-user-guide/
+[link-azure-vm-2]:./virtual-machines-linux-agent-user-guide/
 [link-openssl]:https://www.openssl.org/
 [link-intsvc]:http://www.microsoft.com/download/details.aspx?id=41554
 [link-python]:https://www.python.org/

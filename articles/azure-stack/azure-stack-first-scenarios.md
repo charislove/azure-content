@@ -4,7 +4,7 @@
 	services="azure-stack"
 	documentationCenter=""
 	authors="ErikjeMS"
-	manager="v-kiwhit"
+	manager="byronr"
 	editor=""/>
 
 <tags
@@ -12,27 +12,18 @@
 	ms.workload="na"
 	ms.tgt_pltfrm="na"
 	ms.devlang="na"
-	ms.topic="article"
-	ms.date="01/29/2016"
+	ms.topic="get-started-article"
+	ms.date="09/26/2016"
 	ms.author="erikje"/>
 
 # Azure Stack POC first tasks
 
-The primary objects in Azure Stack – [plans, offers, and subscriptions](azure-stack-key-features.md) – provide IaaS services to tenants like  virtual machines and web sites. It's these services that provide value to your tenants.
+Now that you've [deployed](azure-stack-deploy.md) and [logged in](azure-stack-connect-azure-stack.md) to Azure Stack POC, you can create some resources.
 
-Now that you've [deployed](azure-stack-deploy.md) and [logged in](azure-stack-connect-azure-stack.md) to Azure Stack POC, here are the next steps.
+1.  [Provision a virtual machine](azure-stack-provision-vm.md).
 
-First, sign in as a service administrator and:
-1.  [Create a plan](azure-stack-create-plan.md) to provide compute, network, and storage services.
-
-2.  [Create an offer](azure-stack-create-offer.md) that will contain the plan.
-
-Then, sign in as a tenant and:
-
-1.  [Subscribe to the offer](azure-stack-subscribe-plan-provision-vm.md#subscribe-to-an-offer) and get access to the offer’s plans.
-
-2.  [Use the services](azure-stack-subscribe-plan-provision-vm.md#provision-a-virtual-machine) provided by the offer’s plan to create a virtual machine.
+2.  [Create a storage account](azure-stack-provision-storage-account.md).
 
 ## Next steps
 
-[Create a plan](azure-stack-create-plan.md)
+[Provision a virtual machine](azure-stack-subscribe-plan-provision-vm.md)

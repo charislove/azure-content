@@ -1,10 +1,10 @@
 <properties 
-	pageTitle="How to Check Job Progress using REST API" 
+	pageTitle="How to check job progress using REST API | Microsoft Azure" 
 	description="Learn how to track job progress." 
 	services="media-services" 
 	documentationCenter="" 
 	authors="Juliako" 
-	manager="dwrede" 
+	manager="erikre" 
 	editor=""/>
 
 <tags 
@@ -13,10 +13,10 @@
 	ms.tgt_pltfrm="na" 
 	ms.devlang="na" 
 	ms.topic="article" 
- 	ms.date="02/03/2016"  
+	ms.date="09/26/2016"   
 	ms.author="juliako"/>
 
-#How to: Check Job Progress
+#How to: check job progress
 
 > [AZURE.SELECTOR]
 - [Portal](media-services-portal-check-job-progress.md)

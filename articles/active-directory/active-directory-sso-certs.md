@@ -3,8 +3,8 @@
 	description="Learn how to customize the expiration date for your federation certificates, and how to renew certificates that will soon expire."
 	services="active-directory"
 	documentationCenter=""
-	authors="liviodlc"
-	manager="stevenpo"
+	authors="asmalser-msft"
+	manager="femila"
 	editor=""/>
 
 <tags
@@ -14,7 +14,7 @@
 	ms.devlang="na"
 	ms.topic="article"
 	ms.date="02/09/2016"
-	ms.author="liviodlc"/>
+	ms.author="asmalser-msft"/>
 
 #Managing Certificates for Federated Single Sign-On in Azure Active Directory
 

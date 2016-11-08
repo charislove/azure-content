@@ -72,7 +72,6 @@ In articles that specify both a services value and a documentationCenter value, 
 - backup
 - batch
 - best-practice
-- billing
 - biztalk-services
 - cache
 - cdn
@@ -251,7 +250,7 @@ In articles that specify both a services value and a documentationCenter value, 
 
  - **dev-center-home-page**: Azure.com only.  A dev center home page, e.g. /develop/net/
 
- - **get-started-article**: assign to articles that are featured in the Get Started section of the left navigation for a service.
+ - **get-started-article**: assign to articles that are featured in the Get Started or Overview section of the left navigation for a service.
 
  - **hero-article**: a "hero" tutorial that is designed to provide an introduction to a service or feature that gets visitors started using the service quickly and drives free-trial sign-ups and MSDN activations. Assign this value ONLY to articles that are featured at the top of the documentation landing page for your service.
 
@@ -309,7 +308,7 @@ In articles that specify both a services value and a documentationCenter value, 
 
 ![](./media/article-metadata/checkmark-small.png) **ms.date**: Required. Specifies the date the article was last reviewed for relevance, accuracy, correct screen shots, and working links. Enter the date in mm/dd/yyyy format. This date also appears on the published article as the last updated date.
 
-![](./media/article-metadata/checkmark-small.png) **ms.author**: Required. Specifies the author(s) associated with the topic. To specify multiple values you should separate them with semicolons. Either Microsoft aliases or complete email addresses are acceptable. The length can be no longer than 200 characters.
+![](./media/article-metadata/checkmark-small.png) **ms.author**: Required. Specifies the author(s) associated with the topic. Internal reports (such as freshness) use this value to associate the right author(s) with the article. To specify multiple values you should separate them with semicolons. Either Microsoft aliases or complete email addresses are acceptable. The length can be no longer than 200 characters.
 
 
 ###Contributors' Guide Links

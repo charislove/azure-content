@@ -1,6 +1,6 @@
 ﻿<properties
-   pageTitle="Azure Data Catalog release notes"
-   description="Release notes for the 28 August 2015 public preview release of Azure Data Catalog."
+   pageTitle="Azure Data Catalog release notes | Microsoft Azure"
+   description="Release notes for Azure Data Catalog."
    services="data-catalog"
    documentationCenter=""
    authors="steelanddata"
@@ -13,7 +13,7 @@
    ms.topic="article"
    ms.tgt_pltfrm="NA"
    ms.workload="data-catalog"
-   ms.date="02/08/2016"
+   ms.date="09/21/2016"
    ms.author="maroche"/>
 
 # Azure Data Catalog release notes
@@ -50,17 +50,13 @@ When connecting to Oracle Database data sources users must have installed the co
 
 ### Registering and connecting to SQL Server Reporting Services
 
-Support for SQL Server Reporting Services (SSRS) data sources in the initial preview release of Azure Data Catalog is limited to Native Mode servers only. Support for SSRS in SharePoint mode will be added in a later release.
+Support for SQL Server Reporting Services (SSRS) data sources is currently limited to Native Mode servers only. Support for SSRS in SharePoint mode will be added in a later release.
 
 ### Opening data assets in Excel
 
 When opening data assets in Microsoft Excel from the **Azure Data Catalog** portal, users may be prompted with a **Microsoft Excel Security Notice** dialog box. This is standard, expected behavior, and users can select **Enable** to continue.
 
 For more information, see [Enable or disable security alerts about links and files from suspicious websites](https://support.office.com/article/Enable-or-disable-security-alerts-about-links-and-files-from-suspicious-websites-A1AC6AE9-5C4A-4EB3-B3F8-143336039BBE).
-
-### BLOB and UDT columns missing in previews
-
-When registering tables and views that contain binary large object (BLOB) and user-defined data type (UDT) columns, and selecting to include preview for the data assets, these columns will not be included in the preview.
 
 ### Proxy and policy configuration and data source registration
 

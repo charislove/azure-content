@@ -13,7 +13,7 @@
 	ms.tgt_pltfrm="na"
 	ms.devlang="na"
 	ms.topic="article"
-	ms.date="12/16/2015"
+	ms.date="02/26/2016"
 	ms.author="jaime-espinosa"/>
 
 # Reference for navigating the Azure portal
@@ -46,7 +46,7 @@ When you create a web app, you specify URL, App Service plan, and location in th
 
 ![](./media/app-service-web-app-azure-portal/CreateWebAppSettings.png)
 
-In addition, the portal lets you define other common settings. For example, [resource groups](../resource-group-overview.md) make it simple to see and manage related Azure resources. 
+In addition, the portal lets you define other common settings. For example, [resource groups](../azure-resource-manager/resource-group-overview.md) make it simple to see and manage related Azure resources. 
 
 ## Navigation example: settings and features
 

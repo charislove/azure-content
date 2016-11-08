@@ -1,29 +1,31 @@
-<properties 
+<properties
    pageTitle="Get started with Data Lake Store using cross-platform command line interface | Microsoft Azure"
-   description="Use Azure cross-platform command line to create a Data Lake Store account and perform basic operations" 
-   services="data-lake-store" 
-   documentationCenter="" 
-   authors="nitinme" 
-   manager="paulettm" 
+   description="Use Azure cross-platform command line to create a Data Lake Store account and perform basic operations"
+   services="data-lake-store"
+   documentationCenter=""
+   authors="nitinme"
+   manager="jhubbard"
    editor="cgronlun"/>
- 
+
 <tags
    ms.service="data-lake-store"
    ms.devlang="na"
    ms.topic="get-started-article"
    ms.tgt_pltfrm="na"
-   ms.workload="big-data" 
-   ms.date="01/04/2016"
+   ms.workload="big-data"
+   ms.date="09/27/2016"
    ms.author="nitinme"/>
 
 # Get started with Azure Data Lake Store using Azure Command Line
 
 > [AZURE.SELECTOR]
-- [Using Portal](data-lake-store-get-started-portal.md)
-- [Using PowerShell](data-lake-store-get-started-powershell.md)
-- [Using .NET SDK](data-lake-store-get-started-net-sdk.md)
-- [Using Azure CLI](data-lake-store-get-started-cli.md)
-- [Using Node.js](data-lake-store-manage-use-nodejs.md)
+- [Portal](data-lake-store-get-started-portal.md)
+- [PowerShell](data-lake-store-get-started-powershell.md)
+- [.NET SDK](data-lake-store-get-started-net-sdk.md)
+- [Java SDK](data-lake-store-get-started-java-sdk.md)
+- [REST API](data-lake-store-get-started-rest-api.md)
+- [Azure CLI](data-lake-store-get-started-cli.md)
+- [Node.js](data-lake-store-manage-use-nodejs.md)
 
 Learn how to use Azure command line interface to create an Azure Data Lake Store account and perform basic operations such as create folders, upload and download data files, delete your account, etc. For more information about Data Lake Store, see [Overview of Data Lake Store](data-lake-store-overview.md).
 
@@ -35,37 +37,40 @@ The Azure CLI is implemented in Node.js. It can be used on any platform that sup
 Before you begin this article, you must have the following:
 
 - **An Azure subscription**. See [Get Azure free trial](https://azure.microsoft.com/pricing/free-trial/).
-- **Enable your Azure subscription** for Data Lake Store public preview. See [instructions](data-lake-store-get-started-portal.md#signup). 
+
 - **Azure CLI** - See [Install and configure the Azure CLI](../xplat-cli-install.md) for installation and configuration information. Make sure you reboot your computer after you install the CLI.
+
+## Authentication
+
+This article uses a simpler authentication approach with Data Lake Store where you log in as an end-user user. The access level to Data Lake Store account and file system is then governed by the access level of the logged in user. However, there are other approaches as well to authenticate with Data Lake Store, which are **end-user authentication** or **service-to-service authentication**. For instructions and more information on how to authenticate, see [Authenticate with Data Lake Store using Azure Active Directory](data-lake-store-authenticate-using-active-directory.md).
 
 ##Login to your Azure subscription
 
-Follow the steps documented in [Connect to an Azure subscription from the Azure Command-Line Interface (Azure CLI)](xplat-cli-connect.md) and connect to your subscription using the __login__ method.
+1. Follow the steps documented in [Connect to an Azure subscription from the Azure Command-Line Interface (Azure CLI)](../xplat-cli-connect.md) and connect to your subscription using the `azure login` method.
+
+2. List the subscriptions that are associated with your account using the `azure account list` command.
+
+		info:    Executing command account list
+		data:    Name              Id                                    Current
+		data:    ----------------  ------------------------------------  -------
+		data:    Azure-sub-1       ####################################  true
+		data:    Azure-sub-2       ####################################  false
+
+	From the output above, **Azure-sub-1** is currently enabled, and the other subscription is **Azure-sub-2**. 
+
+3. Select the subscription you want to work under. If you want to work under the Azure-sub-2 subscription, use the `azure account set` command.
+
+		azure account set Azure-sub-2
 
 
 ## Create an Azure Data Lake Store account
 
 Open a command prompt, shell, or a terminal session and run the following commands.
 
-1. Log in to your Azure subscription:
-
-		azure login
-
-	You will be prompted to open a web page and enter an authentication code. Follow the instructions on the page to log in to your Azure subscription. 
-
 2. Switch to Azure Resource Manager mode using the following command:
 
 		azure config mode arm
 
-
-3. List the Azure subscriptions for your account.
-
-		azure account list
-
-
-4. If you have multiple Azure subscriptions, use the following command to set the subscription that the Azure CLI commands will use:
-
-		azure account set <subscriptionname>
 
 5. Create a new resource group. In the following command, provide the parameter values you want to use.
 
@@ -146,12 +151,12 @@ The output of this should be similar to the following:
 
 * **To delete a file**, use the following command:
 
-		azure datalake store filesystem delete <dataLakeStoreAccountName> <path> 
+		azure datalake store filesystem delete <dataLakeStoreAccountName> <path>
 
 	For example:
 
 		azure datalake store filesystem delete mynewdatalakestore /mynewfolder/vehicle1_09142014_copy.csv
-	
+
 	When prompted, enter **Y** to delete the item.
 
 ## View the access control list for a folder in Data Lake Store
@@ -177,17 +182,11 @@ For example:
 
 When prompted, enter **Y** to delete the account.
 
-## Other ways of creating a Data Lake Store account
-
-- [Get Started with Data Lake Store using Portal](data-lake-store-get-started-portal.md)
-- [Get Started with Data Lake Store using .NET SDK](data-lake-store-get-started-net-sdk.md)
-- [Get Started with Data Lake Store using PowerShell](data-lake-store-get-started-powershell.md)
-
 
 ## Next steps
 
 - [Secure data in Data Lake Store](data-lake-store-secure-data.md)
-- [Use Azure Data Lake Analytics with Data Lake Store](data-lake-analytics-get-started-portal.md)
+- [Use Azure Data Lake Analytics with Data Lake Store](../data-lake-analytics/data-lake-analytics-get-started-portal.md)
 - [Use Azure HDInsight with Data Lake Store](data-lake-store-hdinsight-hadoop-use-portal.md)
 
 

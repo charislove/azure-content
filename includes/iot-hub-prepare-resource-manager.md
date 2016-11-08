@@ -1,4 +1,4 @@
-## Prepare to authenticate Resource Manager requests
+## Prepare to authenticate Azure Resource Manager requests
 
 You must authenticate all the operations that you perform on resources using the [Azure Resource Manager][lnk-authenticate-arm] with Azure Active Directory (AD). The easiest way to configure this is to use PowerShell or Azure CLI.
 
@@ -47,4 +47,4 @@ You have now finished creating the Azure AD application that will enable you to 
 - Password
 
 [lnk-authenticate-arm]: https://msdn.microsoft.com/library/azure/dn790557.aspx
-[lnk-powershell-install]: ../powershell-install-configure.md
+[lnk-powershell-install]: ../articles/powershell-install-configure.md

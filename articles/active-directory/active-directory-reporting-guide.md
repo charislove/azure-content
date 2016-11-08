@@ -3,8 +3,8 @@
    description="A guide containing all Azure Active Directory Reporting articles"
    services="active-directory"
    documentationCenter=""
-   authors="kenhoff"
-   manager="mbaldwin"
+   authors="dhanyahk"
+   manager="femila"
    editor=""/>
 
 <tags
@@ -13,19 +13,20 @@
    ms.topic="article"
    ms.tgt_pltfrm="na"
    ms.workload="identity"
-   ms.date="12/07/2015"
-   ms.author="kenhoff"/>
+   ms.date="10/24/2016"
+   ms.author="femila"/>
 
 
 # Azure Active Directory Reporting Guide
 
+> [AZURE.SELECTOR]
+- [Azure portal](active-directory-reporting-azure-portal.md)
+- [Azure classic portal](active-directory-reporting-guide.md)
+
+ - [Azure Active Directory reporting - preview](active-directory-reporting-azure-portal.md)
  - [Getting started with the Azure AD Reporting API](active-directory-reporting-api-getting-started.md)
  - [Azure Active Directory Reporting Audit Events](active-directory-reporting-audit-events.md)
  - [Azure Active Directory Reporting Retention](active-directory-reporting-retention.md)
- - [Azure Active Directory Reporting Previews](active-directory-reporting-previews.md)
- - [Azure Active Directory Reporting Search](active-directory-reporting-search.md)
  - [Azure Active Directory Reporting Backfill](active-directory-reporting-backfill.md)
  - [Azure Active Directory Reporting Latencies](active-directory-reporting-latencies.md)
- - [Azure Active Directory Reporting "Unknown Actor" event](active-directory-reporting-unknown-actor.md)
- - [Azure Active Directory All User Sign In Activity Report](active-directory-reporting-all-user-sign-in-activity-report.md)
  - [View your access and usage reports](active-directory-view-access-usage-reports.md)

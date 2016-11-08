@@ -4,7 +4,7 @@
 	services="active-directory"
 	documentationCenter=""
 	authors="IHenkel"
-	manager="stevenpo"
+	manager="femila"
 	editor=""/>
 
 <tags
@@ -28,7 +28,7 @@
 7. Change the **User Assignment Required to Access App** toggle to Yes.
 8. Click the **Save** button at the bottom of the screen.
 
-You will now have to assign users and/or groups to the application. See [Assigning users to an application](active-directory-guiding-developers-assigning-users.md) and [Assigning groups to an application](active-directory-guiding-developers-assigning-groups.md).
+You will now have to assign users and/or groups to the application. See [Assigning users to an application](active-directory-applications-guiding-developers-assigning-users.md) and [Assigning groups to an application](active-directory-applications-guiding-developers-assigning-groups.md).
 
 ## Next Steps
 [AZURE.INCLUDE [active-directory-applications-guiding-developers-for-lob-applications-toc.md](../../includes/active-directory-applications-guiding-developers-for-lob-applications-toc.md)]

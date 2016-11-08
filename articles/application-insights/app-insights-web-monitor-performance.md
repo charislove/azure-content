@@ -108,51 +108,6 @@ To see what other metrics you can display, click a graph, and then deselect all 
 
 Selecting any metric will disable the others that can't appear on the same chart.
 
-## System performance counters
-
-Some of the metrics you can choose from are [performance counters](http://www.codeproject.com/Articles/8590/An-Introduction-To-Performance-Counters). Windows provides a wide variety of them, and you can also define your own.
-
-This example shows performance counters that are available by default. We have [added a separate chart](app-insights-metrics-explorer.md#editing-charts-and-grids) for each counter, and named the chart by [saving it as a favorite](app-insights-metrics-explorer.md#editing-charts-and-grids):
-
-![](./media/app-insights-web-monitor-performance/sys-perf.png)
-
-
-If the counters you want aren't in the properties list, you can add them to the set that the SDK collects. Open ApplicationInsights.config and edit the performance collector directive:
-
-    <Add Type="Microsoft.ApplicationInsights.Extensibility.PerfCollector.PerformanceCollectorModule, Microsoft.ApplicationInsights.Extensibility.PerfCollector">
-      <Counters>
-        <Add PerformanceCounter="\Objects\Processes"/>
-        <Add PerformanceCounter="\Sales(electronics)\# Items Sold" ReportAs="Item sales"/>
-      </Counters>
-    </Add>
-
-The format is `\Category(instance)\Counter"` or for categories that don't have instances, just `\Category\Counter`. To discover what counters are available in your system, read [this introduction](http://www.codeproject.com/Articles/8590/An-Introduction-To-Performance-Counters).
-
-`ReportAs` is required for counter names that contain characters other than these: letters, round brackets, forward slahes, hyphens, underscores, spaces and dots.
-
-If you specify an instance, it will be collected as a property "CounterInstanceName" of the reported metric.
-
-If you prefer, you can write code to have the same effect:
-
-    var perfCollectorModule = new PerformanceCollectorModule();
-    perfCollectorModule.Counters.Add(new PerformanceCounterCollectionRequest(
-      @"\Sales(electronics)\# Items Sold", "Items sold"));
-    perfCollectorModule.Initialize(TelemetryConfiguration.Active);
-
-In addition, if you want to collect system performance counters and push them to Application Insights, you can use the snippet below:
-
-    var perfCollectorModule = new PerformanceCollectorModule();
-    perfCollectorModule.Counters.Add(new PerformanceCounterCollectionRequest(
-      @"\.NET CLR Memory([replace-with-application-process-name])\# GC Handles", "GC Handles")));
-    perfCollectorModule.Initialize(TelemetryConfiguration.Active);
-
-### Exception counts
-
-*What's the difference between the Exception rate and Exceptions metrics?*
-
-* *Exception rate* is a system performance counter. The CLR counts all the handled and unhandled exceptions that are thrown, and divides the total in a sampling interval by the length of the interval. The Application Insights SDK collects this result and sends it to the portal.
-* *Exceptions* is a count of the TrackException reports received by the portal in the sampling interval of the chart. It includes only the handled exceptions where you have written TrackException calls in your code, and doesn't include all [unhandled exceptions](app-insights-asp-net-exceptions.md). 
-
 ## Set alerts
 
 To be notified by email of unusual values of any metric, add an alert. You can choose either to send the email to the account administrators, or to specific email addresses.
